@@ -38,7 +38,7 @@ class Downloader:
             path (:obj:`str`, optional): Directory where the page will be saved on disk.
 
         Returns:
-            If `path` is None, the resulting file as a string. Otherwise the path to the
+            str: If `path` is None, the resulting file as a string. Otherwise the path to the
             downloaded file on disk.
 
         Examples:
