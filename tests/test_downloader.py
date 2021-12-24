@@ -8,26 +8,37 @@ from criterion.scraping import Downloader
 TEMP_DIR = tempfile.gettempdir()
 
 
-def test_data_dir_defaults_to_cwd() -> None:
-
-    dl = Downloader()
-
-    assert dl.data_dir == "."
-
-
 @pytest.mark.parametrize(
-    "url,data_dir,expected",
+    "url,path,expected",
     [
-        ("https://www.criterion.com/shop/browse/list", None, "./list"),
+        ("https://www.criterion.com/shop/browse/list", "", "list"),
         ("https://www.criterion.com/shop/browse/list", TEMP_DIR, f"{TEMP_DIR}/list"),
         (
             "https://www.criterion.com/shop/browse/list?sort=spine_number",
-            None,
-            "./list",
+            "",
+            "list",
         ),
     ],
 )
-def test_create_path_from_url(url: str, data_dir: str, expected: str) -> None:
+def test_create_path_from_url(url: str, path: str, expected: str) -> None:
 
-    assert Downloader().create_path(url, data_dir) == expected
-    assert Downloader(data_dir).create_path(url) == expected
+    assert Downloader().create_path(url, path) == expected
+
+
+@pytest.mark.parametrize(
+    "url,path,expected",
+    [
+        ("https://www.criterion.com/shop/browse/list", TEMP_DIR, f"{TEMP_DIR}/list"),
+    ],
+)
+def test_download_page_with_path(url: str, path: str, expected: str) -> None:
+
+    assert Downloader().download_page(url, path) == expected
+
+
+def test_download_page_as_string() -> None:
+
+    url = "https://www.criterion.com/shop/browse/list"
+    page_text = Downloader().download_page(url)
+
+    assert "Seven Samurai" in page_text
