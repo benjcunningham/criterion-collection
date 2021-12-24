@@ -2,7 +2,7 @@ import tempfile
 
 import pytest
 
-from criterion.scraping import Downloader
+from criterion.scraping.utils import create_path, download_page
 
 
 TEMP_DIR = tempfile.gettempdir()
@@ -22,7 +22,7 @@ TEMP_DIR = tempfile.gettempdir()
 )
 def test_create_path_from_url(url: str, path: str, expected: str) -> None:
 
-    assert Downloader().create_path(url, path) == expected
+    assert create_path(url, path) == expected
 
 
 @pytest.mark.parametrize(
@@ -33,12 +33,12 @@ def test_create_path_from_url(url: str, path: str, expected: str) -> None:
 )
 def test_download_page_with_path(url: str, path: str, expected: str) -> None:
 
-    assert Downloader().download_page(url, path) == expected
+    assert download_page(url, path) == expected
 
 
 def test_download_page_as_string() -> None:
 
     url = "https://www.criterion.com/shop/browse/list"
-    page_text = Downloader().download_page(url)
+    page_text = download_page(url)
 
     assert "Seven Samurai" in page_text
